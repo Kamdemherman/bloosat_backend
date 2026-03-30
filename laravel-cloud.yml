@@ -1,0 +1,27 @@
+name: bloosat-bss-backend
+repository: your-github-repo/bss-backend
+runtime: php-8.2
+build:
+  - composer install --no-dev --optimize-autoloader
+  - php artisan config:cache
+  - php artisan route:cache
+  - php artisan view:cache
+databases:
+  - mysql
+cache:
+  - redis
+queues:
+  - redis
+environments:
+  production:
+    domain: your-app.laravel.cloud
+    build:
+      - php artisan migrate --force
+      - php artisan db:seed --force
+    env:
+      APP_ENV: production
+      APP_DEBUG: false
+      LOG_LEVEL: error
+      QUEUE_CONNECTION: redis
+      CACHE_STORE: redis
+      SESSION_DRIVER: redis
